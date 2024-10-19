@@ -11,8 +11,8 @@
 |
 */
 
-pest()->extend(\VendorName\PackageName\Tests\TestCase::class)->in('Feature');
-pest()->extend(\VendorName\PackageName\Tests\TestCase::class)->in('Unit');
+pest()->extend(\Paulund\ContentMarkdown\Tests\TestCase::class)->in('Feature');
+pest()->extend(\Paulund\ContentMarkdown\Tests\TestCase::class)->in('Unit');
 
 /*
 |--------------------------------------------------------------------------

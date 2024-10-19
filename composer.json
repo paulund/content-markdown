@@ -1,17 +1,24 @@
 {
-    "name": "vendor/package-name",
-    "description": "Package description",
-    "keywords": [],
+    "name": "paulund/content-markdown",
+    "description": "Fetch markdown files and convert HTML",
+    "keywords": [
+        "Paulund",
+        "laravel",
+        "content",
+        "package"
+    ],
     "authors": [
         {
-            "name": "Author name",
-            "email": "author@domain.com",
+            "name": "Paul Underwood",
+            "email": "paul@paulund.co.uk",
             "role": "Developer"
         }
     ],
     "require": {
         "php": "^8.3",
-        "illuminate/contracts": "^10.0||^11.0"
+        "illuminate/contracts": "^10.0||^11.0",
+        "spatie/commonmark-shiki-highlighter": "^2.4",
+        "symfony/yaml": "^7.1"
     },
     "require-dev": {
         "laravel/pint": "^1.0",
@@ -22,9 +29,12 @@
     "extra": {
         "laravel": {
             "providers": [
-                "VendorName\\PackageName\\PackageNameServiceProvider"
+                "Paulund\\ContentMarkdown\\ContentMarkdownServiceProvider"
             ]
         }
+    },
+    "suggest": {
+        "paulund/og-image-generator": "To generate social media images from pages"
     },
     "scripts": {
         "post-autoload-dump": [
@@ -59,9 +69,9 @@
     "prefer-stable": true,
     "autoload": {
         "psr-4": {
-            "VendorName\\PackageName\\": "src/",
-            "VendorName\\PackageName\\Tests\\": "tests/",
-            "VendorName\\PackageName\\Database\\Factories\\": "database/factories/"
+            "Paulund\\ContentMarkdown\\": "src/",
+            "Paulund\\ContentMarkdown\\Tests\\": "tests/",
+            "Paulund\\ContentMarkdown\\Database\\Factories\\": "database/factories/"
         }
     },
     "autoload-dev": {

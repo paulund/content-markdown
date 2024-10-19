@@ -4,6 +4,14 @@ Configs are a great way to allow users of your package to customize the behavior
 
 The default config files is stored in the `config` folder of your package.
 
+You can publish new config files to the Laravel application by defining them in the service provider.
+
+```php
+$this->publishes([
+    __DIR__.'/../config' => config_path(),
+], 'vendor/package-name');
+```
+
 When you run the command `php artisan vendor:publish --tag=package-name-config` the config file will be copied to the
 `config` folder of the Laravel application.
 
