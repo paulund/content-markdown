@@ -7,16 +7,11 @@ use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Concerns\HasTimestamps;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Facades\Storage;
-use League\CommonMark\Environment\Environment;
-use League\CommonMark\Extension\Autolink\AutolinkExtension;
-use League\CommonMark\Extension\CommonMark\CommonMarkCoreExtension;
-use League\CommonMark\Extension\FrontMatter\FrontMatterExtension;
 use League\CommonMark\Extension\FrontMatter\Output\RenderedContentWithFrontMatter;
-use League\CommonMark\Extension\HeadingPermalink\HeadingPermalinkExtension;
-use League\CommonMark\MarkdownConverter;
+use Paulund\ContentMarkdown\Actions\ContentFrontMatter;
+use Paulund\ContentMarkdown\Actions\ContentMarkdown;
+use Paulund\ContentMarkdown\Actions\StorageDisk;
 use Paulund\ContentMarkdown\Database\Factories\ContentFactory;
-use Spatie\CommonMarkShikiHighlighter\HighlightCodeExtension;
 
 /**
  * @property string $folder
@@ -134,19 +129,8 @@ class Content extends Model
      */
     public function populate(): self
     {
-        $config = config('content-markdown.commonmark.config');
-
-        $environment = (new Environment($config))
-            ->addExtension(new CommonMarkCoreExtension)
-            ->addExtension(new FrontMatterExtension)
-            ->addExtension(new AutolinkExtension)
-            ->addExtension(new HeadingPermalinkExtension)
-            ->addExtension(new HighlightCodeExtension(theme: 'github-light'));
-
-        $storage = Storage::disk(config('content-markdown.filesystem.disk', 'local'));
-        $markdownConverter = new MarkdownConverter($environment);
-        $renderedContent = $markdownConverter->convert($storage->get($this->filename));
-
+        $content = (new StorageDisk)->get($this->filename);
+        $renderedContent = (new ContentMarkdown)->parse($content);
         if ($renderedContent instanceof RenderedContentWithFrontMatter) {
             $frontMatter = $renderedContent->getFrontMatter();
             $this->frontMatterTitle = $frontMatter['title'] ?? '';
@@ -164,18 +148,10 @@ class Content extends Model
         }
 
         $this->attemptPopulateFrontMatter = true;
-        $config = config('content-markdown.commonmark.config');
+        $content = (new StorageDisk)->get($this->filename);
+        $frontMatter = (new ContentFrontMatter)->frontMatter($content);
 
-        $environment = (new Environment($config))
-            ->addExtension(new CommonMarkCoreExtension)
-            ->addExtension(new FrontMatterExtension);
-
-        $storage = Storage::disk(config('content-markdown.filesystem.disk', 'local'));
-        $markdownConverter = new MarkdownConverter($environment);
-        $renderedContent = $markdownConverter->convert($storage->get($this->filename));
-
-        if ($renderedContent instanceof RenderedContentWithFrontMatter) {
-            $frontMatter = $renderedContent->getFrontMatter();
+        if (count($frontMatter) > 0) {
             $this->frontMatterTitle = $frontMatter['title'] ?? '';
             $this->frontMatterDescription = $frontMatter['description'] ?? '';
         }

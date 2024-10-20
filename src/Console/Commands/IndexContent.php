@@ -4,13 +4,9 @@ namespace Paulund\ContentMarkdown\Console\Commands;
 
 use Carbon\Carbon;
 use Illuminate\Console\Command;
-use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
-use League\CommonMark\Environment\Environment;
-use League\CommonMark\Extension\CommonMark\CommonMarkCoreExtension;
-use League\CommonMark\Extension\FrontMatter\FrontMatterExtension;
-use League\CommonMark\Extension\FrontMatter\Output\RenderedContentWithFrontMatter;
-use League\CommonMark\MarkdownConverter;
+use Paulund\ContentMarkdown\Actions\ContentFrontMatter;
+use Paulund\ContentMarkdown\Actions\StorageDisk;
 use Paulund\ContentMarkdown\Models\Content;
 
 /**
@@ -32,27 +28,28 @@ class IndexContent extends Command
      */
     protected $description = 'Index the content markdown files into the database';
 
+    public function __construct(
+        private readonly StorageDisk $storageDisk,
+        private readonly ContentFrontMatter $contentFrontMatter
+    ) {
+        parent::__construct();
+    }
+
     /**
      * Execute the console command.
      */
     public function handle(): void
     {
         // Get all the markdown files in the content folder
-        $files = $this->storageDisk()->allFiles();
+        $files = $this->storageDisk->allFiles();
 
         foreach ($files as $file) {
             $this->info("Processing $file");
 
-            // Get the frontmatter of the file
-            $environment = (new Environment([]))
-                ->addExtension(new CommonMarkCoreExtension)
-                ->addExtension(new FrontMatterExtension);
-            $markdownConverter = new MarkdownConverter($environment);
-            $renderedContent = $markdownConverter->convert($this->storageDisk()->get($file));
+            $content = $this->storageDisk->get($file);
+            $frontMatter = $this->contentFrontMatter->frontMatter($content);
 
-            if ($renderedContent instanceof RenderedContentWithFrontMatter) {
-                $frontMatter = $renderedContent->getFrontMatter();
-
+            if ($frontMatter) {
                 $published = $frontMatter['published'] ?? true;
                 $fileParts = explode('/', $file);
                 $folder = array_shift($fileParts);
@@ -99,10 +96,5 @@ class IndexContent extends Command
                 }
             }
         }
-    }
-
-    private function storageDisk(): \Illuminate\Contracts\Filesystem\Filesystem
-    {
-        return Storage::disk(config('content-markdown.filesystem.disk', 'local'));
     }
 }

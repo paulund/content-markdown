@@ -61,7 +61,7 @@ return [
                 'apply_id_to_heading' => true,
                 'heading_class' => '',
                 'fragment_prefix' => 'content',
-                'insert' => 'after',
+                'insert' => 'before',
                 'min_heading_level' => 1,
                 'max_heading_level' => 6,
                 'title' => 'Permalink',
