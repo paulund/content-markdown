@@ -6,6 +6,30 @@
 [![Total Downloads](https://img.shields.io/packagist/dt/paulund/content-markdown.svg?style=flat-square)](https://packagist.org/packages/paulund/content-markdown)
 
 ---
+
+## Table of Contents
+
+- [Content Markdown](#content-markdown)
+- [Installation](#installation)
+- [Setup](#setup)
+    - [Add Filesystem Disk](#add-filesystem-disk)
+    - [Setup Database Configuration](#setup-database-configuration)
+    - [Draft Posts](#draft-posts)
+    - [Commonmark Configuration](#commonmark-configuration)
+- [Content Properties](#content-properties)
+- [Usage](#usage)
+    - [Index Command](#index-command)
+    - [Get All Content](#get-all-content)
+    - [Get All Content In Folder](#get-all-content-in-folder)
+    - [Get The Latest 10 Content](#get-the-latest-10-content)
+    - [Get Content By Slug](#get-content-by-slug)
+    - [Get Content By Tag](#get-content-by-tag)
+    - [Populate Content](#populate-content)
+    - [Content Cache](#content-cache)
+- [Testing](#testing)
+- [Credits](#credits)
+- [License](#license)
+
 This Laravel pattern with allow you to add a lightweight CMS to your Laravel application. This package will allow you to
 create markdown files in your Laravel application and then display the content on the front end of your website.
 

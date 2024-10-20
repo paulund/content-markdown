@@ -57,10 +57,10 @@ return [
         'config' => [
             'heading_permalink' => [
                 'html_class' => 'heading-permalink',
-                'id_prefix' => 'content',
+                'id_prefix' => '',
                 'apply_id_to_heading' => true,
                 'heading_class' => '',
-                'fragment_prefix' => 'content',
+                'fragment_prefix' => '',
                 'insert' => 'before',
                 'min_heading_level' => 1,
                 'max_heading_level' => 6,
