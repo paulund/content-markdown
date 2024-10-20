@@ -66,8 +66,27 @@ return [
                 'max_heading_level' => 6,
                 'title' => 'Permalink',
                 'symbol' => '#',
-                'aria_hidden' => true,
             ],
         ],
+    ],
+
+    /*
+    |--------------------------------------------------------------------------
+    | Cache Configuration
+    |--------------------------------------------------------------------------
+    |
+    | Configure the Cache for your content. This is enabled by middleware
+    |
+    */
+    'cache' => [
+        /**
+         * Cache store to use
+         */
+        'store' => env('CONTENT_CACHE_STORE', 'file'),
+
+        /**
+         * Seconds to cache the content for 3600 = 1 hour
+         */
+        'ttl' => env('CONTENT_CACHE_TTL', 3600),
     ],
 ];

@@ -205,6 +205,47 @@ echo $content->description;
 echo $content->content;
 ```
 
+### Content Cache
+
+Whenever you make a request the application will need to lookup the database but the slug of the file, then
+lookup the markdown file, then parse the markdown to display it. This can add some latency to the request. To
+speed up the request you can cache the content using the `CacheResponse` middleware.
+
+```php
+Route::get('/content/{slug}', function ($slug) {
+    $content = Content::slug($slug)->first();
+    $content->populate();
+
+    return response()->json($content);
+})->middleware(\Paulund\ContentMarkdown\Http\Middleware\CacheResponse::class);
+```
+
+This will cache the response for 1 hour using the file store.
+
+If you want to customise the cache settings you can change the store and the ttl.
+
+```php
+/*
+|--------------------------------------------------------------------------
+| Cache Configuration
+|--------------------------------------------------------------------------
+|
+| Configure the Cache for your content. This is enabled by middleware
+|
+*/
+'cache' => [
+    /**
+     * Cache store to use
+     */
+    'store' => env('CONTENT_CACHE_STORE', 'file'),
+
+    /**
+     * Seconds to cache the content for 3600 = 1 hour
+     */
+    'ttl' => env('CONTENT_CACHE_TTL', 3600),
+]
+```
+
 ## Testing
 
 ```bash
