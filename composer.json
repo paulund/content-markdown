@@ -34,7 +34,8 @@
         }
     },
     "suggest": {
-        "paulund/og-image-generator": "To generate social media images from pages"
+        "paulund/og-image-generator": "To generate social media images from pages",
+        "paulund/rss-feed": "Generate RSS feeds from markdown files"
     },
     "scripts": {
         "post-autoload-dump": [
