@@ -259,6 +259,11 @@ If you want to customise the cache settings you can change the store and the ttl
 */
 'cache' => [
     /**
+     * Enable or disable the cache
+     */
+    'enabled' => env('CONTENT_CACHE_ENABLED', true),
+        
+    /**
      * Cache store to use
      */
     'store' => env('CONTENT_CACHE_STORE', 'file'),
@@ -268,6 +273,12 @@ If you want to customise the cache settings you can change the store and the ttl
      */
     'ttl' => env('CONTENT_CACHE_TTL', 3600),
 ]
+```
+
+By default content cache is enabled, but there is a config option to disable it, in your .env file you can add:
+
+```php
+CONTENT_CACHE_ENABLED=false
 ```
 
 ## Testing

@@ -80,6 +80,11 @@ return [
     */
     'cache' => [
         /**
+         * Enable or disable the cache
+         */
+        'enabled' => env('CONTENT_CACHE_ENABLED', true),
+
+        /**
          * Cache store to use
          */
         'store' => env('CONTENT_CACHE_STORE', 'file'),
