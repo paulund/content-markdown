@@ -12,6 +12,14 @@ class CacheResponse
 {
     public function handle(Request $request, Closure $next, ...$args): Response
     {
+        if ($request->getMethod() !== 'GET') {
+            return $next($request);
+        }
+
+        if (! empty($request->session()->all())) {
+            return $next($request);
+        }
+
         $cacheEnabled = config('content-markdown.cache.enabled', true);
         $cacheKey = $this->getCacheKey($request);
 
