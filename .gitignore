@@ -1,5 +1,6 @@
 # Ignore vendor directory
 /vendor/
+composer.lock
 
 # Ignore environment-specific files
 .env
