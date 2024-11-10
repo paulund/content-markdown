@@ -30,7 +30,7 @@
 - [Credits](#credits)
 - [License](#license)
 
-This Laravel pattern with allow you to add a lightweight CMS to your Laravel application. This package will allow you to
+This Laravel package with allow you to add a lightweight CMS to your Laravel application. This package will allow you to
 create markdown files in your Laravel application and then display the content on the front end of your website.
 
 It works by writing in markdown files and then index the slug into the database. This will allow you to query on this
