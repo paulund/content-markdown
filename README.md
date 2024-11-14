@@ -147,7 +147,7 @@ This package uses commonmark to parse the markdown files. You can customise the 
 
 - title - The title of the content
 - slug - The slug of the content
-- tags - The tags of the content in array format
+- tags - The tags of the content in array format, can also be string format
 - published - A boolean to define if the content is published
 - createdAt - The date the content was created
 
@@ -158,6 +158,16 @@ slug: content-slug
 tags:
     - blog
     - writing
+published: true
+createdAt: 2022-09-03 15:00:00
+---
+```
+
+```markdown
+---
+title: Content Title
+slug: content-slug
+tags: blog
 published: true
 createdAt: 2022-09-03 15:00:00
 ---
@@ -279,6 +289,17 @@ By default content cache is enabled, but there is a config option to disable it,
 
 ```php
 CONTENT_CACHE_ENABLED=false
+```
+
+## On Deployment
+
+After deployment of your application you can run the index command to index all the markdown files, you will also want to
+run a few other commands to optimise the application.
+
+```bash
+php artisan optimize
+php artisan cache:clear file
+php artisan content:index
 ```
 
 ## Testing
