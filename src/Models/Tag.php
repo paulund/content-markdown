@@ -8,10 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 use Paulund\ContentMarkdown\Database\Factories\TagFactory;
 
 /**
- * @property string $slug
- * @property bool $published
- * @property array $frontmatter
- * @property ?\Carbon\Carbon $published_at
+ * @property string $name
  */
 class Tag extends Model
 {
