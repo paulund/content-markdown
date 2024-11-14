@@ -4,6 +4,7 @@ namespace Paulund\ContentMarkdown\Console\Commands;
 
 use Carbon\Carbon;
 use Illuminate\Console\Command;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Str;
 use Paulund\ContentMarkdown\Actions\ContentFrontMatter;
 use Paulund\ContentMarkdown\Actions\StorageDisk;
@@ -81,11 +82,12 @@ class IndexContent extends Command
                 if (isset($frontMatter['tags'])) {
                     $currentTags = $content->tags->pluck('name')->map('strtolower')->toArray();
 
-                    foreach ($frontMatter['tags'] as $tag) {
+                    $allTags = Arr::wrap($frontMatter['tags']);
+                    foreach ($allTags as $tag) {
                         $content->tags()->firstOrCreate(['name' => strtolower($tag)]);
                     }
 
-                    $tagsToDelete = array_diff($currentTags, $frontMatter['tags']);
+                    $tagsToDelete = array_diff($currentTags, $allTags);
 
                     foreach ($tagsToDelete as $tagDelete) {
                         $tagModel = $content->tags()->where('name', strtolower($tagDelete))->first();
