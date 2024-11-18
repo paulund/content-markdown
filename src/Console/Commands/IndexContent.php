@@ -98,5 +98,12 @@ class IndexContent extends Command
                 }
             }
         }
+
+        // Delete content if the file doesn't exist
+        Content::get()->each(function ($content) use ($files) {
+            if (! in_array($content->filename, $files)) {
+                $content->delete();
+            }
+        });
     }
 }
