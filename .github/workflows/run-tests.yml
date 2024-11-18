@@ -54,5 +54,10 @@ jobs:
       - name: List Installed Dependencies
         run: composer show -D
 
+      - name: Create SQLite database file
+        run: |
+          mkdir -p vendor/orchestra/testbench-core/laravel/database
+          touch vendor/orchestra/testbench-core/laravel/database/database.sqlite
+
       - name: Execute tests
         run: vendor/bin/pest --ci
