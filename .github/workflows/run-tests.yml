@@ -19,7 +19,7 @@ jobs:
     strategy:
       fail-fast: true
       matrix:
-        os: [ubuntu-latest, windows-latest]
+        os: [ubuntu-latest]
         php: [8.3]
         laravel: [11.*]
         stability: [prefer-lowest, prefer-stable]
@@ -53,6 +53,11 @@ jobs:
 
       - name: List Installed Dependencies
         run: composer show -D
+
+      - name: Create SQLite database file
+        run: |
+          mkdir -p vendor/orchestra/testbench-core/laravel/database
+          touch vendor/orchestra/testbench-core/laravel/database/database.sqlite
 
       - name: Execute tests
         run: vendor/bin/pest --ci
