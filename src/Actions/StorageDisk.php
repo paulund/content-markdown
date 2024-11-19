@@ -11,12 +11,18 @@ class StorageDisk
         return Storage::disk(config('content-markdown.filesystem.disk'));
     }
 
-    public function folders($directory = null): array
+    /**
+     * @return string[]
+     */
+    public function folders(?string $directory = null): array
     {
         return $this->disk()->allDirectories($directory);
     }
 
-    public function allFiles($directory = null): array
+    /**
+     * @return string[]
+     */
+    public function allFiles(?string $directory = null): array
     {
         return $this->disk()->allFiles($directory);
     }

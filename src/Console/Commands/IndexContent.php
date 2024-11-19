@@ -6,7 +6,8 @@ use Carbon\Carbon;
 use Illuminate\Console\Command;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Str;
-use Paulund\ContentMarkdown\Actions\ContentFrontMatter;
+use League\CommonMark\Extension\FrontMatter\Output\RenderedContentWithFrontMatter;
+use Paulund\ContentMarkdown\Actions\ContentMarkdown;
 use Paulund\ContentMarkdown\Actions\StorageDisk;
 use Paulund\ContentMarkdown\Models\Content;
 
@@ -31,7 +32,7 @@ class IndexContent extends Command
 
     public function __construct(
         private readonly StorageDisk $storageDisk,
-        private readonly ContentFrontMatter $contentFrontMatter
+        private readonly ContentMarkdown $contentMarkdown
     ) {
         parent::__construct();
     }
@@ -48,10 +49,10 @@ class IndexContent extends Command
             $this->info("Processing $file");
 
             $content = $this->storageDisk->get($file);
-            $frontMatter = $this->contentFrontMatter->frontMatter($content);
+            $markdown = $this->contentMarkdown->parse($content);
 
-            if ($frontMatter) {
-                $published = $frontMatter['published'] ?? true;
+            if ($markdown instanceof RenderedContentWithFrontMatter) {
+                $published = $markdown->getFrontMatter()['published'] ?? true;
                 $fileParts = explode('/', $file);
                 $folder = array_shift($fileParts);
                 $filename = array_pop($fileParts);
@@ -62,15 +63,18 @@ class IndexContent extends Command
                 }
 
                 // Save the content to the database
-                $content = Content::withoutGlobalScopes()->firstOrNew(['slug' => $frontMatter['slug']]);
+                $content = Content::withoutGlobalScopes()->firstOrNew(['slug' => $markdown->getFrontMatter()['slug']]);
 
                 if ($published) {
-                    $content->published_at = isset($frontMatter['createdAt']) ? Carbon::parse($frontMatter['createdAt']) : now();
+                    $content->published_at = isset($markdown->getFrontMatter()['createdAt']) ? Carbon::parse($markdown->getFrontMatter()['createdAt']) : now();
                 } elseif (! $published) {
                     $content->published_at = null;
                 }
 
                 $content->fill([
+                    'title' => $markdown->getFrontMatter()['title'] ?? '',
+                    'description' => $markdown->getFrontMatter()['description'] ?? '',
+                    'content' => $markdown->getContent(),
                     'folder' => $folder,
                     'filename' => $file,
                     'published' => $published,
@@ -79,10 +83,10 @@ class IndexContent extends Command
                 $content->save();
 
                 // Tags
-                if (isset($frontMatter['tags'])) {
+                if (isset($markdown->getFrontMatter()['tags'])) {
                     $currentTags = $content->tags->pluck('name')->map('strtolower')->toArray();
 
-                    $allTags = Arr::wrap($frontMatter['tags']);
+                    $allTags = Arr::wrap($markdown->getFrontMatter()['tags']);
                     foreach ($allTags as $tag) {
                         $content->tags()->firstOrCreate(['name' => strtolower($tag)]);
                     }
