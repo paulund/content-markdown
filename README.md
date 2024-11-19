@@ -181,7 +181,7 @@ description: This is the meta description of the post
 ### Index Command
 The index command will take the markdown files in the filesystem disk and index the file in the database.
 
-Whenever a new markdown files is created you can run this command to index the file.
+Whenever a new markdown files is created you need to run this command to index the file.
 
 ```bash
 php artisan content:index
@@ -228,14 +228,12 @@ You can query the content by the tag of the markdown file.
 Content::hasTag('blog')->get();
 ```
 
-### Populate Content
+### Display Content
 
-Once you have found your content model in the database you can populate it with the content of the markdown file by
-using the `populate` method.
+Once you have found your content model in the database you can fetch the model and use the following properties.
 
 ```php
 $content = Content::slug('content-slug')->first();
-$content->populate();
 
 echo $content->title;
 echo $content->description;
@@ -251,7 +249,6 @@ speed up the request you can cache the content using the `CacheResponse` middlew
 ```php
 Route::get('/content/{slug}', function ($slug) {
     $content = Content::slug($slug)->first();
-    $content->populate();
 
     return response()->json($content);
 })->middleware(\Paulund\ContentMarkdown\Http\Middleware\CacheResponse::class);
@@ -314,7 +311,7 @@ composer test
 
 ## Credits
 
-- [paulund](https://github.com/paulund)
+- [paulund](https://paulund.co.uk/projects/content-markdown)
 
 ## License
 

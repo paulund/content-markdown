@@ -12,7 +12,7 @@ use Paulund\ContentMarkdown\Database\Factories\ContentFactory;
 
 /**
  * @property string $title
- * @property string $descritpion
+ * @property string $description
  * @property string $content
  * @property string $folder
  * @property string $filename
