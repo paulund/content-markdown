@@ -7,6 +7,9 @@ use League\CommonMark\Extension\FrontMatter\FrontMatterExtension;
 
 class ContentFrontMatter
 {
+    /**
+     * @return array<string, mixed>
+     */
     public function frontMatter(string $content): array
     {
         try {

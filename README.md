@@ -150,6 +150,7 @@ This package uses commonmark to parse the markdown files. You can customise the 
 - tags - The tags of the content in array format, can also be string format
 - published - A boolean to define if the content is published
 - createdAt - The date the content was created
+- description - Meta description of the post
 
 ```markdown
 ---
@@ -160,6 +161,7 @@ tags:
     - writing
 published: true
 createdAt: 2022-09-03 15:00:00
+description: This is the meta description of the post
 ---
 ```
 
@@ -170,6 +172,7 @@ slug: content-slug
 tags: blog
 published: true
 createdAt: 2022-09-03 15:00:00
+description: This is the meta description of the post
 ---
 ```
 

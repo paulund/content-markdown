@@ -10,7 +10,7 @@ use Symfony\Component\HttpFoundation\Response;
 
 class CacheResponse
 {
-    public function handle(Request $request, Closure $next, ...$args): Response
+    public function handle(Request $request, Closure $next): Response
     {
         if ($request->getMethod() !== 'GET') {
             return $next($request);
@@ -46,7 +46,7 @@ class CacheResponse
         return 'response_cache_'.md5($request->getPathInfo());
     }
 
-    private function cacheStore()
+    private function cacheStore(): string
     {
         return app()->environment('testing') ? 'array' : config('content-markdown.cache.store', 'file');
     }
