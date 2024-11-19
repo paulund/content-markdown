@@ -10,6 +10,7 @@ use League\CommonMark\Extension\FrontMatter\Output\RenderedContentWithFrontMatte
 use Paulund\ContentMarkdown\Actions\ContentMarkdown;
 use Paulund\ContentMarkdown\Actions\StorageDisk;
 use Paulund\ContentMarkdown\Models\Content;
+use Paulund\ContentMarkdown\Models\ContentLastIndexed;
 
 /**
  * This will loop through all the content markdown files in the content folder and index them into the database
@@ -21,7 +22,7 @@ class IndexContent extends Command
      *
      * @var string
      */
-    protected $signature = 'content:index';
+    protected $signature = 'content:index {--force}';
 
     /**
      * The console command description.
@@ -42,10 +43,21 @@ class IndexContent extends Command
      */
     public function handle(): void
     {
+        if ($this->option('force')) {
+            ContentLastIndexed::truncate();
+        }
+
         // Get all the markdown files in the content folder
         $files = $this->storageDisk->allFiles();
+        $lastIndex = ContentLastIndexed::first()->last_indexed ?? 0;
 
         foreach ($files as $file) {
+
+            $lastModified = $this->storageDisk->lastModified($file);
+            if ($lastModified < $lastIndex) {
+                continue;
+            }
+
             $this->info("Processing $file");
 
             $content = $this->storageDisk->get($file);
@@ -109,5 +121,8 @@ class IndexContent extends Command
                 $content->delete();
             }
         });
+
+        ContentLastIndexed::truncate();
+        ContentLastIndexed::create(['last_indexed' => now()->timestamp]);
     }
 }

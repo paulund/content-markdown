@@ -32,6 +32,11 @@ class StorageDisk
         return $this->disk()->get($file);
     }
 
+    public function lastModified(string $file): int
+    {
+        return $this->disk()->lastModified($file);
+    }
+
     public function exists(string $file): bool
     {
         return $this->disk()->exists($file);

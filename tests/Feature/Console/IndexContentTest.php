@@ -73,4 +73,6 @@ Content here');
         'slug' => 'test-title',
         'filename' => 'content/2021-01-02-test.md',
     ]);
+
+    $this->assertNotNull(\Paulund\ContentMarkdown\Models\ContentLastIndexed::first());
 });
