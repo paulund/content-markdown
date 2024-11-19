@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::connection($this->getConnectionName())->table($this->getTableName(), function (Blueprint $table) {
             $table->string('title')->after('updated_at')->nullable();
             $table->text('description')->after('title')->nullable();
-            $table->text('content')->after('description')->nullable();
+            $table->longText('content')->after('description')->nullable();
         });
     }
 
