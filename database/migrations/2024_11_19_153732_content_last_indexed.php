@@ -12,7 +12,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::connection($this->getConnectionName())->create($this->getTableName(), function (Blueprint $table) {
-            $table->timestamp('last_indexed')->nullable();
+            $table->dateTime('last_indexed')->nullable();
         });
     }
 

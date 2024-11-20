@@ -17,6 +17,10 @@ class ContentLastIndexed extends Model
         'last_indexed',
     ];
 
+    protected $casts = [
+        'last_indexed' => 'datetime',
+    ];
+
     /**
      * @param  array<string, mixed>  $attributes
      */

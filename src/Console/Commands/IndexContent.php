@@ -49,11 +49,11 @@ class IndexContent extends Command
 
         // Get all the markdown files in the content folder
         $files = $this->storageDisk->allFiles();
-        $lastIndex = ContentLastIndexed::first()->last_indexed ?? 0;
+        $lastIndex = Carbon::parse(ContentLastIndexed::first()->last_indexed ?? 0);
 
         foreach ($files as $file) {
 
-            $lastModified = $this->storageDisk->lastModified($file);
+            $lastModified = Carbon::parse($this->storageDisk->lastModified($file));
             if ($lastModified < $lastIndex) {
                 continue;
             }
@@ -123,6 +123,6 @@ class IndexContent extends Command
         });
 
         ContentLastIndexed::truncate();
-        ContentLastIndexed::create(['last_indexed' => now()->timestamp]);
+        ContentLastIndexed::create(['last_indexed' => now()]);
     }
 }
