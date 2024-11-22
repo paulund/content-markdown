@@ -24,7 +24,6 @@
     - [Get The Latest 10 Content](#get-the-latest-10-content)
     - [Get Content By Slug](#get-content-by-slug)
     - [Get Content By Tag](#get-content-by-tag)
-    - [Populate Content](#populate-content)
     - [Content Cache](#content-cache)
 - [Testing](#testing)
 - [Credits](#credits)
