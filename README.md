@@ -7,6 +7,8 @@
 
 ---
 
+![Content Markdown Laravel Package](https://raw.githubusercontent.com/paulund/content-markdown/refs/heads/main/assets/images/content-markdown.webp)
+
 ## Table of Contents
 
 - [Content Markdown](#content-markdown)
