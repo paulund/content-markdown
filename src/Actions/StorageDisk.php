@@ -2,6 +2,7 @@
 
 namespace Paulund\ContentMarkdown\Actions;
 
+use Carbon\Carbon;
 use Illuminate\Support\Facades\Storage;
 
 class StorageDisk
@@ -35,6 +36,11 @@ class StorageDisk
     public function lastModified(string $file): int
     {
         return $this->disk()->lastModified($file);
+    }
+
+    public function lastModifiedDate(string $file): Carbon
+    {
+        return Carbon::parse($this->disk()->lastModified($file));
     }
 
     public function exists(string $file): bool

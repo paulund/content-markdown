@@ -58,6 +58,9 @@
         "test": [
             "./vendor/bin/pest"
         ],
+        "test-filter": [
+            "./vendor/bin/pest --filter"
+        ],
         "test-coverage": [
             "./vendor/bin/pest --coverage"
         ],
