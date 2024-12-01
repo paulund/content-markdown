@@ -2,15 +2,16 @@
 
 namespace Paulund\ContentMarkdown\Console\Commands;
 
-use Carbon\Carbon;
 use Illuminate\Console\Command;
-use Illuminate\Support\Arr;
-use Illuminate\Support\Str;
 use League\CommonMark\Extension\FrontMatter\Output\RenderedContentWithFrontMatter;
+use Paulund\ContentMarkdown\Actions\ContentIndexClear;
+use Paulund\ContentMarkdown\Actions\ContentIndexDate;
+use Paulund\ContentMarkdown\Actions\ContentIndexSetNow;
 use Paulund\ContentMarkdown\Actions\ContentMarkdown;
+use Paulund\ContentMarkdown\Actions\ContentStore;
+use Paulund\ContentMarkdown\Actions\ContentStoreTags;
 use Paulund\ContentMarkdown\Actions\StorageDisk;
 use Paulund\ContentMarkdown\Models\Content;
-use Paulund\ContentMarkdown\Models\ContentLastIndexed;
 
 /**
  * This will loop through all the content markdown files in the content folder and index them into the database
@@ -33,7 +34,12 @@ class IndexContent extends Command
 
     public function __construct(
         private readonly StorageDisk $storageDisk,
-        private readonly ContentMarkdown $contentMarkdown
+        private readonly ContentMarkdown $contentMarkdown,
+        private readonly ContentIndexClear $contentIndexClear,
+        private readonly ContentIndexDate $contentIndexDate,
+        private readonly ContentIndexSetNow $contentIndexSetNow,
+        private readonly ContentStore $contentStore,
+        private readonly ContentStoreTags $contentStoreTags,
     ) {
         parent::__construct();
     }
@@ -44,74 +50,28 @@ class IndexContent extends Command
     public function handle(): void
     {
         if ($this->option('force')) {
-            ContentLastIndexed::truncate();
+            $this->contentIndexClear->execute();
         }
 
         // Get all the markdown files in the content folder
         $files = $this->storageDisk->allFiles();
-        $lastIndex = Carbon::parse(ContentLastIndexed::first()->last_indexed ?? 0);
+        $lastIndex = $this->contentIndexDate->execute();
 
         foreach ($files as $file) {
-
-            $lastModified = Carbon::parse($this->storageDisk->lastModified($file));
+            $lastModified = $this->storageDisk->lastModifiedDate($file);
             if ($lastModified < $lastIndex) {
                 continue;
             }
 
             $this->info("Processing $file");
 
-            $content = $this->storageDisk->get($file);
-            $markdown = $this->contentMarkdown->parse($content);
+            $markdown = $this->contentMarkdown->parse(
+                $this->storageDisk->get($file)
+            );
 
             if ($markdown instanceof RenderedContentWithFrontMatter) {
-                $published = $markdown->getFrontMatter()['published'] ?? true;
-                $fileParts = explode('/', $file);
-                $folder = array_shift($fileParts);
-                $filename = array_pop($fileParts);
-
-                // Check if the file is a draft
-                if (Str::startsWith($filename, config('content-markdown.drafts.prefix', '.'))) {
-                    $published = false;
-                }
-
-                // Save the content to the database
-                $content = Content::withoutGlobalScopes()->firstOrNew(['slug' => $markdown->getFrontMatter()['slug']]);
-
-                if ($published) {
-                    $content->published_at = isset($markdown->getFrontMatter()['createdAt']) ? Carbon::parse($markdown->getFrontMatter()['createdAt']) : now();
-                } elseif (! $published) {
-                    $content->published_at = null;
-                }
-
-                $content->fill([
-                    'title' => $markdown->getFrontMatter()['title'] ?? '',
-                    'description' => $markdown->getFrontMatter()['description'] ?? '',
-                    'content' => $markdown->getContent(),
-                    'folder' => $folder,
-                    'filename' => $file,
-                    'published' => $published,
-                ]);
-
-                $content->save();
-
-                // Tags
-                if (isset($markdown->getFrontMatter()['tags'])) {
-                    $currentTags = $content->tags->pluck('name')->map('strtolower')->toArray();
-
-                    $allTags = Arr::wrap($markdown->getFrontMatter()['tags']);
-                    foreach ($allTags as $tag) {
-                        $content->tags()->firstOrCreate(['name' => strtolower($tag)]);
-                    }
-
-                    $tagsToDelete = array_diff($currentTags, $allTags);
-
-                    foreach ($tagsToDelete as $tagDelete) {
-                        $tagModel = $content->tags()->where('name', strtolower($tagDelete))->first();
-                        if ($tagModel) {
-                            $content->tags()->detach($tagModel);
-                        }
-                    }
-                }
+                $content = $this->contentStore->execute($file, $markdown);
+                $this->contentStoreTags->execute($content, $markdown);
             }
         }
 
@@ -122,7 +82,7 @@ class IndexContent extends Command
             }
         });
 
-        ContentLastIndexed::truncate();
-        ContentLastIndexed::create(['last_indexed' => now()]);
+        $this->contentIndexClear->execute();
+        $this->contentIndexSetNow->execute();
     }
 }
