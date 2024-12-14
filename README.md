@@ -147,7 +147,7 @@ This package uses commonmark to parse the markdown files. You can customise the 
 ## Content Properties
 
 - title - The title of the content
-- slug - The slug of the content
+- slug - The slug of the content (optional)
 - tags - The tags of the content in array format, can also be string format
 - published - A boolean to define if the content is published
 - createdAt - The date the content was created

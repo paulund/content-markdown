@@ -16,7 +16,8 @@ class ContentStore
         $filename = array_pop($fileParts);
 
         $published = $markdown->getFrontMatter()['published'] ?? true;
-        $content = Content::withoutGlobalScopes()->firstOrNew(['slug' => $markdown->getFrontMatter()['slug']]);
+        $slug = $markdown->getFrontMatter()['slug'] ?? Str::slug($markdown->getFrontMatter()['title']);
+        $content = Content::withoutGlobalScopes()->firstOrNew(['slug' => $slug]);
 
         // Check if the file is a draft
         if (Str::startsWith($filename, config('content-markdown.drafts.prefix', '.'))) {
