@@ -3098,16 +3098,16 @@
         },
         {
             "name": "spatie/commonmark-shiki-highlighter",
-            "version": "2.5.0",
+            "version": "2.5.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/spatie/commonmark-shiki-highlighter.git",
-                "reference": "0e3304989ad79ae7987f0d3a9308f40772513904"
+                "reference": "595c7e0b45d4a63b17dfc1ccbd13532d431ec351"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/spatie/commonmark-shiki-highlighter/zipball/0e3304989ad79ae7987f0d3a9308f40772513904",
-                "reference": "0e3304989ad79ae7987f0d3a9308f40772513904",
+                "url": "https://api.github.com/repos/spatie/commonmark-shiki-highlighter/zipball/595c7e0b45d4a63b17dfc1ccbd13532d431ec351",
+                "reference": "595c7e0b45d4a63b17dfc1ccbd13532d431ec351",
                 "shasum": ""
             },
             "require": {
@@ -3146,7 +3146,7 @@
                 "spatie"
             ],
             "support": {
-                "source": "https://github.com/spatie/commonmark-shiki-highlighter/tree/2.5.0"
+                "source": "https://github.com/spatie/commonmark-shiki-highlighter/tree/2.5.1"
             },
             "funding": [
                 {
@@ -3154,7 +3154,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2024-11-12T09:36:42+00:00"
+            "time": "2025-01-13T11:25:47+00:00"
         },
         {
             "name": "spatie/shiki-php",
@@ -9767,5 +9767,5 @@
         "php": "^8.3"
     },
     "platform-dev": [],
-    "plugin-api-version": "2.6.0"
+    "plugin-api-version": "2.3.0"
 }
