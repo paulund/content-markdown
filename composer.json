@@ -16,14 +16,14 @@
     ],
     "require": {
         "php": "^8.3",
-        "illuminate/contracts": "^10.0||^11.0",
+        "illuminate/contracts": "^11.0||^12.0",
         "spatie/commonmark-shiki-highlighter": "^2.4",
         "symfony/yaml": "^7.1"
     },
     "require-dev": {
         "laravel/pint": "^1.0",
-        "larastan/larastan": "^2.0",
-        "orchestra/testbench": "^9.4",
+        "larastan/larastan": "^3.1",
+        "orchestra/testbench": "^10",
         "pestphp/pest": "^3.0"
     },
     "extra": {

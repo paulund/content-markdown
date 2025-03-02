@@ -19,7 +19,7 @@ use Paulund\ContentMarkdown\Database\Factories\ContentFactory;
  * @property string $slug
  * @property bool $published
  * @property ?\Carbon\Carbon $published_at
- * @property Collection $tags
+ * @property Collection<int, Tag> $tags
  */
 class Content extends Model
 {
